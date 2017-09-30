@@ -45,7 +45,7 @@
           p (promise)]
       (publish this topic {:request-id request-id :payload payload})
       (swap! promises assoc request-id p)
-      @p))
+      (deref p 10000 nil)))
 
   (subscribe-and-answer [this topic call-back-fn]
     (subscribe this topic (fn [{:keys [request-id payload]}]
