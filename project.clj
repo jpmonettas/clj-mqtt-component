@@ -1,4 +1,4 @@
-(defproject clj-mqtt-component "0.1.0-SNAPSHOT"
+(defproject clj-mqtt-component "0.1.0"
   :description "Mqtt component"
   :url "Mqtt component"
   :license {:name "Eclipse Public License"
