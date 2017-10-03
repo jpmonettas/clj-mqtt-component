@@ -14,7 +14,22 @@
 (extend-type Mqtt
   comp/Lifecycle
   (start [{:keys [opts] :as this}]
-    (let [conn (mh/connect (:url opts) {:client-id (:client-id opts)})
+    (let [conn (loop []
+                 ;; this is only for the first time mqtt connection
+                 ;; if connection fails after first establishment reconnections will be
+                 ;; managed by the machine-head :auto-reconnect 
+                 (println "Connecting to mqtt at " (:url opts))
+                 (if-let [c (try
+                              (mh/connect (:url opts) {:client-id (:client-id opts)
+                                                       :opts {:auto-reconnect true
+                                                              :keep-alive-interval (or (:keep-alive-interval opts) 60)}
+                                                       :on-connection-lost (:on-connection-lost opts)
+                                                       :on-connect-complete (:on-connect-complete opts)})
+                              (catch Exception e))]
+                   c
+                   (do (println "Error connecting to mqtt at " (:url opts))
+                       (Thread/sleep 5000)
+                       (recur))))
           promises (atom {})
           init-cmp (assoc this
                           :conn conn
