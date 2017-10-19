@@ -22,7 +22,8 @@
                  (if-let [c (try
                               (mh/connect (:url opts) {:client-id (:client-id opts)
                                                        :opts {:auto-reconnect true
-                                                              :keep-alive-interval (or (:keep-alive-interval opts) 60)}
+                                                              :keep-alive-interval (or (:keep-alive-interval opts) 60)
+                                                              :clean-session false}
                                                        :on-connection-lost (:on-connection-lost opts)
                                                        :on-connect-complete (:on-connect-complete opts)})
                               (catch Exception e))]
